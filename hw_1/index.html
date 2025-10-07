@@ -46,7 +46,7 @@
      alert("You can buy " + chocolates + " chocolates. Change: " + change);
 
      number = prompt("Enter a three-digit number:");
-     reversed = number % 10 * 100 + Math.floor(number / 10) % 10 * 10 + Math.floor(number / 100);
+     reversed = number[2] + number[1] + number[0];
      alert("Reversed number: " + reversed);
 
      num = prompt("Enter an integer:");

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traffic Light</title>
+  <style>
+      body {
+          margin: 0;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          background: #f5f5f5;
+          font-family: Arial, sans-serif;
+      }
+
+      .container {
+          background: white;
+          border: 2px solid #ddd;
+          border-radius: 8px;
+          padding: 15px 20px;
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .lights {
+          display: flex;
+          gap: 15px;
+          align-items: center;
+      }
+
+      .light {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: #999;
+      }
+
+      .light:nth-child(1).active {
+          background: #ff0000;
+      }
+
+      .light:nth-child(2).active {
+          background: #ffdd00;
+      }
+
+      .light:nth-child(3).active {
+          background: #00ff00;
+      }
+
+      button {
+          padding: 12px 20px;
+          font-size: 14px;
+          font-weight: normal;
+          color: #333;
+          background: white;
+          border: 2px solid #ddd;
+          border-radius: 6px;
+          cursor: pointer;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+      }
+
+      button:hover {
+          background: #f9f9f9;
+      }
+
+      button:active {
+          background: #f0f0f0;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="lights">
+    <div class="light" id="light1"></div>
+    <div class="light active" id="light2"></div>
+    <div class="light" id="light3"></div>
+  </div>
+  <button onclick="nextLight()">Next</button>
+</div>
+
+<script>
+  let currentLight = 2;
+
+  function nextLight() {
+    document.getElementById('light' + currentLight).classList.remove('active');
+
+    currentLight = currentLight === 3 ? 1 : currentLight + 1;
+
+    document.getElementById('light' + currentLight).classList.add('active');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button Classes</title>
+</head>
+<body>
+<h1>Button Class</h1>
+
+<script>
+  class Button {
+    constructor(width, height, text) {
+      this.width = width;
+      this.height = height;
+      this.text = text;
+    }
+
+    showBtn() {
+      document.write(
+        `<button style="width: ${this.width}px; height: ${this.height}px;">
+                        ${this.text}
+                    </button>`
+      );
+    }
+  }
+
+  class BootstrapButton extends Button {
+    constructor(width, height, text, color) {
+      super(width, height, text);
+      this.color = color;
+    }
+
+    showBtn() {
+      document.write(
+        `<button style="
+                        width: ${this.width}px;
+                        height: ${this.height}px;
+                        background-color: ${this.color};
+                        color: white;
+                        border-radius: 4px;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        font-family: Arial, sans-serif;
+                    ">
+                        ${this.text}
+                    </button>`
+      );
+    }
+  }
+
+  const regularBtn = new Button(150, 50, 'Click Me');
+  regularBtn.showBtn();
+
+  document.write('<br><br>');
+
+  const bootstrapBtn = new BootstrapButton(200, 60, 'Submit', '#007bff');
+  bootstrapBtn.showBtn();
+
+  document.write('<br><br>');
+
+  const successBtn = new BootstrapButton(180, 55, 'Success', '#28a745');
+  successBtn.showBtn();
+
+  document.write('<br><br>');
+
+  const dangerBtn = new BootstrapButton(180, 55, 'Delete', '#dc3545');
+  dangerBtn.showBtn();
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тест</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          background: #f5f5f5;
+          padding: 20px;
+      }
+
+      .question-box {
+          background: #e8e4dc;
+          border-radius: 8px;
+          padding: 30px;
+          margin-bottom: 20px;
+          max-width: 800px;
+      }
+
+      .question-box.active {
+          display: block;
+      }
+
+      .question-title {
+          font-size: 20px;
+          margin-bottom: 20px;
+      }
+
+      .option {
+          margin: 10px 0;
+      }
+
+      input[type="radio"] {
+          width: 18px;
+          height: 18px;
+          margin-right: 10px;
+      }
+
+      label {
+          font-size: 18px;}
+
+      button {
+          background: #d0d0d0;
+          border: 1px solid #999;
+          padding: 10px 30px;
+          font-size: 16px;
+          margin-top: 15px;
+      }
+  </style>
+</head>
+<body>
+<div id="q1" class="question-box active">
+  <div class="question-title">1) How many letters are there in the word "Hello"?</div>
+  <div class="option">
+    <input type="radio" name="q1" value="5" id="q1a1">
+    <label for="q1a1">5</label>
+  </div>
+  <div class="option">
+    <input type="radio" name="q1" value="2" id="q1a2">
+    <label for="q1a2">2</label>
+  </div>
+  <button onclick="next()">Next</button>
+</div>
+
+<div id="q2" class="question-box">
+  <div class="question-title">2) How many letters are there in the word "World"?</div>
+  <div class="option">
+    <input type="radio" name="q2" value="4" id="q2a1">
+    <label for="q2a1">4</label>
+  </div>
+  <div class="option">
+    <input type="radio" name="q2" value="5" id="q2a2">
+    <label for="q2a2">5</label>
+  </div>
+  <button onclick="finish()">Finish</button>
+</div>
+
+<div id="result" class="question-box">
+  <div class="question-title" id="resultText"></div>
+</div>
+
+<script>
+  function next() {
+    document.getElementById('q1').classList.remove('active');
+    document.getElementById('q2').classList.add('active');
+  }
+
+  function finish() {
+    let score = 0;
+
+    if (document.querySelector('input[name="q1"]:checked')?.value === '5') score++;
+    if (document.querySelector('input[name="q2"]:checked')?.value === '5') score++;
+
+    document.getElementById('q2').classList.remove('active');
+    document.getElementById('result').classList.add('active');
+    document.getElementById('resultText').textContent = 'Result: ' + score + ' correct answers to 2 questions.';
+  }
+</script>
+</body>
+</html>

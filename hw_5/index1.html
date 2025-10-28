@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Like Button</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          margin: 0;
+          background: #f5f5f5;
+      }
+
+      .like-btn {
+          background: #1da1f2;
+          color: white;
+          border: none;
+          padding: 15px 40px;
+          font-size: 24px;
+          border-radius: 8px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .like-btn:hover {
+          background: #1a8cd8;
+      }
+
+      .like-btn:active {
+          transform: scale(0.95);
+      }
+
+      .thumb-icon {
+          font-size: 28px;
+      }
+  </style>
+</head>
+<body>
+<button class="like-btn" id="likeBtn">
+  <span class="thumb-icon">👍</span>
+  <span>Like <span id="counter">0</span></span>
+</button>
+
+<script>
+  let count = 0;
+  const btn = document.getElementById('likeBtn');
+  const counter = document.getElementById('counter');
+
+  btn.addEventListener('click', function() {
+    count++;
+    counter.textContent = count;
+  });
+</script>
+</body>
+</html>

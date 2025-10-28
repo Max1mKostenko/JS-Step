@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email</title>
+</head>
+<body>
+
+<script>
+
+  var regex = /^(0[1-9] | [1-2][0-9] | 3[01])\.(0[1-9] | 1[0-2])\.\d{4}$/;
+
+  console.log(regex.test("25.10.2025")); // true
+  console.log(regex.test("5.10.25"));    // false
+  console.log(regex.test("05.10.2025")); // true
+  console.log(regex.test("25.10.25"));   // false
+
+
+  var priceRegex = /\$\d+(?:\.\d+)?/g;
+  var prices = "Milk: $5, Bread: $3.50, Cheese: $12".match(priceRegex);
+  console.log(prices);
+
+  var str_regex = /\s+/g;
+  console.log("   Hello    world   ".trim().replace(str_regex, ' '));
+
+</script>
+</body>
+</html>

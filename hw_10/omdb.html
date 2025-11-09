@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <style>
+      body{
+          font-family: Arial, Helvetica, sans-serif;
+          padding: 20px;
+          background-color: darksalmon;
+          text-align: center;
+      }
+
+      input, select, button {
+          margin: 5px;
+          padding: 10px;
+          font-size: 16px;
+      }
+      #results {
+          margin-top: 20px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+      }
+      #pagination{
+          margin-top: 20px;
+      }
+
+      .card {
+          background: white;
+          border-radius: 8px;
+          padding: 15px;
+          width: 200px;
+      }
+
+      .card img {
+          width: 100%;
+          height: 280px;
+          border-radius: 5px;
+      }
+
+      .card h2 {
+          font-size: 16px;
+          margin: 10px 0 5px 0;
+      }
+
+      .card h3 {
+          font-size: 14px;
+          color: #666;
+          margin: 3px 0;
+      }
+
+      #pageInput {
+          width: 60px;
+          padding: 5px;
+          text-align: center;
+      }
+
+  </style>
+</head>
+<body>
+<h1>Пошук фільмів та серіалів🎥🎞️🎬</h1>
+
+<div>
+  <input type="text" id="searchText" placeholder="Введіть назву або її частину">
+  <select id="selection">
+    <option value="Movie">Фільм</option>
+    <option value="Series">Серіал</option>
+    <option value="Episode">Епізод</option>
+  </select>
+  <button onclick="search()">Пошук</button>
+</div>
+
+<div id="results">
+</div>
+
+<div id="pagination">
+  <button onclick="back()">Назад ◀️</button>
+  <span id="currentPageID">Сторінка 1</span>
+
+  <input type="number" id="pageInput" placeholder="№">
+  <button onclick="goToPage()">Перейти</button>
+
+  <button onclick="forward()">Вперед ⏩️</button>
+</div>
+
+</body>
+<script>
+  const API = '135df0ae'
+
+  let currentPage = 1
+  let totalPages = 1
+  let title = ''
+  let type=''
+
+  function search() {
+    title  = searchText.value
+    type = selection.value
+    if (!title) return
+
+    getResult()
+  }
+
+  function forward() {
+    if (currentPage < totalPages) {
+      currentPage++
+      getResult()
+    }
+  }
+
+  function back() {
+    if (currentPage > 1) {
+      currentPage--
+      getResult()
+    }
+  }
+
+  function goToPage() {
+    let page = parseInt(pageInput.value)
+    if (page >= 1 && page <= totalPages) {
+      currentPage = page
+      getResult()
+    }
+  }
+
+  async function getResult() {
+    let URL = `https://www.omdbapi.com/?apikey=${API}&s=${title}&type=${type}&page=${currentPage}`
+
+    let response = await fetch(URL)
+    let data = await response.json()
+
+    totalPages = Math.ceil(+data.totalResults / 10)
+    currentPageID.textContent = `Сторінка ${currentPage} з ${totalPages}`
+    showResult(data.Search)
+  }
+
+  function showResult(movies) {
+    results.innerHTML = ''
+
+    movies.forEach(m => {
+      let card = document.createElement('div')
+      card.className = 'card'
+      card.innerHTML = `<img src=${m.Poster === 'N/A' ? 'https://www.researchgate.net/profile/Zhiyong-Huang-5/publication/220979011/figure/fig2/AS:305419869278214@1449829179710/An-example-of-white-noise-image.png' : m.Poster}>
+                        <h2>${m.Title}</h2>
+                        <h3>${m.Year}</h3>
+                        <h3>${m.Type}</h3>`
+
+      results.appendChild(card)
+    })
+  }
+</script>
+</html>

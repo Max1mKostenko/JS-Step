@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Малювання</title>
+</head>
+<body>
+<canvas id="myCanvas" width="500" height="500" style="background-color: bisque; border: 2px solid black;"></canvas>
+
+<div style="margin-top: 10px;">
+  <label for="colorPicker">Колір: </label>
+  <input type="color" id="colorPicker" value="#000000">
+
+  <label for="brushSize" style="margin-left: 20px;">Товщина: </label>
+  <input type="range" id="brushSize" min="1" max="20" value="3">
+  <span id="sizeValue">3</span>px
+
+  <button onclick="save()" style="margin-left: 20px;">SAVE</button>
+  <button onclick="clearCanvas()">CLEAR</button>
+</div>
+
+<script>
+  let context = myCanvas.getContext('2d')
+  let drawing = false
+  let colorPicker = document.getElementById('colorPicker')
+  let brushSize = document.getElementById('brushSize')
+  let sizeValue = document.getElementById('sizeValue')
+
+  // Оновлення відображення товщини
+  brushSize.addEventListener('input', e => {
+    sizeValue.textContent = e.target.value
+  })
+
+  myCanvas.addEventListener('mousedown', e => {
+    drawing = true
+    context.beginPath()
+    context.moveTo(e.offsetX, e.offsetY)
+  })
+
+  myCanvas.addEventListener('mouseup', e => {
+    drawing = false
+    context.closePath()
+  })
+
+  myCanvas.addEventListener('mousemove', e => {
+    if (drawing) {
+      context.strokeStyle = colorPicker.value
+      context.lineWidth = brushSize.value
+      context.lineTo(e.offsetX, e.offsetY)
+      context.stroke()
+    }
+  })
+
+  function save() {
+    let link = document.createElement('a')
+    link.download = 'myImageJS.png'
+    link.href = myCanvas.toDataURL()
+    link.click()
+  }
+
+  function clearCanvas() {
+    context.clearRect(0, 0, myCanvas.width, myCanvas.height)
+  }
+</script>
+</body>
+</html>

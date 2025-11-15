@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clicker Game</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          max-width: 400px;
+          margin: 50px auto;
+          padding: 20px;
+          background: #f0f0f0;
+      }
+
+      .container {
+          background: white;
+          padding: 20px;
+          border-radius: 10px;
+      }
+
+      h1 {
+          text-align: center;
+      }
+
+      .score {
+          font-size: 36px;
+          text-align: center;
+          margin: 20px 0;
+      }
+
+      button {
+          width: 100%;
+          padding: 15px;
+          font-size: 18px;
+          margin: 10px 0;
+          cursor: pointer;
+          border: none;
+          border-radius: 5px;
+      }
+
+      .click-btn {
+          background: #4CAF50;
+          color: white;
+          font-size: 24px;
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+          margin: 20px auto;
+          display: block;
+      }
+
+      .click-btn:hover {
+          background: #45a049;
+      }
+
+      .shake {
+          animation: shake 0.3s;
+      }
+
+      @keyframes shake {
+          0%, 100% { transform: rotate(0deg); }
+          25% { transform: rotate(-10deg); }
+          75% { transform: rotate(10deg); }
+      }
+
+      .buy-btn {
+          background: #2196F3;
+          color: white;
+      }
+
+      .buy-btn:hover:not(:disabled) {
+          background: #0b7dda;
+      }
+
+      .buy-btn:disabled {
+          background: #ccc;
+          cursor: not-allowed;
+      }
+
+      .upgrade {
+          margin: 15px 0;
+          padding: 10px;
+          background: #f9f9f9;
+          border-radius: 5px;
+      }
+
+      .stats {
+          margin-top: 20px;
+          padding-top: 10px;
+          border-top: 1px solid #ddd;
+      }
+
+      .reset-btn {
+          background: #f44336;
+          color: white;
+          margin-top: 20px;
+      }
+
+      .reset-btn:hover {
+          background: #da190b;
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Clicker Game</h1>
+
+  <div class="score" id="score">0</div>
+
+  <button class="click-btn" id="clickBtn">КЛИК</button>
+
+  <div class="upgrade">
+    <div>Улучшение клика (Уровень: <span id="clickLevel">0</span>)</div>
+    <div>+1 за клик</div>
+    <button class="buy-btn" id="buyClick">
+      Купить (<span id="clickCost">10</span>)
+    </button>
+  </div>
+
+  <div class="upgrade">
+    <div>Авто-кликер (Уровень: <span id="autoLevel">0</span>)</div>
+    <div>+1 в секунду</div>
+    <button class="buy-btn" id="buyAuto">
+      Купить (<span id="autoCost">50</span>)
+    </button>
+  </div>
+
+  <div class="stats">
+    <div>Очков за клик: <span id="perClick">1</span></div>
+    <div>Очков в секунду: <span id="perSecond">0</span></div>
+  </div>
+
+  <button class="reset-btn" id="resetBtn">Сбросить прогресс</button>
+</div>
+
+<script>
+  let score = 0;
+  let clickPower = 1;
+  let autoClickPower = 0;
+
+  let clickUpgrade = { level: 0, baseCost: 10 };
+  let autoUpgrade = { level: 0, baseCost: 50 };
+
+  function loadGame() {
+    const saved = localStorage.getItem('clickerSave');
+    if (saved) {
+      const data = JSON.parse(saved);
+      score = data.score;
+      clickPower = data.clickPower;
+      autoClickPower = data.autoClickPower;
+      clickUpgrade = data.clickUpgrade;
+      autoUpgrade = data.autoUpgrade;
+    }
+  }
+
+  function saveGame() {
+    const data = {
+      score,
+      clickPower,
+      autoClickPower,
+      clickUpgrade,
+      autoUpgrade
+    };
+    localStorage.setItem('clickerSave', JSON.stringify(data));
+  }
+
+  function getCost(upgrade) {
+    return Math.floor(upgrade.baseCost * Math.pow(1.5, upgrade.level));
+  }
+
+  function updateDisplay() {
+    document.getElementById('score').textContent = Math.floor(score);
+    document.getElementById('perClick').textContent = clickPower;
+    document.getElementById('perSecond').textContent = autoClickPower;
+
+    document.getElementById('clickLevel').textContent = clickUpgrade.level;
+    document.getElementById('autoLevel').textContent = autoUpgrade.level;
+
+    const clickCost = getCost(clickUpgrade);
+    const autoCost = getCost(autoUpgrade);
+
+    document.getElementById('clickCost').textContent = clickCost;
+    document.getElementById('autoCost').textContent = autoCost;
+
+    document.getElementById('buyClick').disabled = score < clickCost;
+    document.getElementById('buyAuto').disabled = score < autoCost;
+  }
+
+  document.getElementById('clickBtn').addEventListener('click', () => {
+    score += clickPower;
+
+    const btn = document.getElementById('clickBtn');
+    btn.classList.add('shake');
+    setTimeout(() => btn.classList.remove('shake'), 300);
+
+    updateDisplay();
+    saveGame();
+  });
+
+  document.getElementById('buyClick').addEventListener('click', () => {
+    const cost = getCost(clickUpgrade);
+    if (score >= cost) {
+      score -= cost;
+      clickUpgrade.level++;
+      clickPower++;
+      updateDisplay();
+      saveGame();
+    }
+  });
+
+  document.getElementById('buyAuto').addEventListener('click', () => {
+    const cost = getCost(autoUpgrade);
+    if (score >= cost) {
+      score -= cost;
+      autoUpgrade.level++;
+      autoClickPower++;
+      updateDisplay();
+      saveGame();
+    }
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (confirm('Вы уверены? Весь прогресс будет удалён!')) {
+      localStorage.removeItem('clickerSave');
+      score = 0;
+      clickPower = 1;
+      autoClickPower = 0;
+      clickUpgrade = { level: 0, baseCost: 10 };
+      autoUpgrade = { level: 0, baseCost: 50 };
+      updateDisplay();
+    }
+  });
+
+  setInterval(() => {
+    if (autoClickPower > 0) {
+      score += autoClickPower;
+      updateDisplay();
+      saveGame();
+    }
+  }, 1000);
+
+  loadGame();
+  updateDisplay();
+</script>
+</body>
+</html>
